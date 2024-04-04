@@ -1,32 +1,15 @@
 pipeline {
-  
-    agent {
-        label 'Ansible-Node'
-    }
-    
-    tools{
-        maven "Maven-3.9.6"
-    }
+    agent any
 
     stages {
-        stage('Clone') {
+        stage('git to jenkins') {
             steps {
-               git 'https://github.com/ashokitschool/maven-web-app.git'
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'b4182c20-63b1-475c-be7e-5a803d886977', url: 'https://github.com/Hemanthsrk/javaprojectown.git']])
             }
         }
         stage('Build') {
             steps {
-               sh 'mvn clean package'
-            }
-        }
-        
-        stage('Create Image'){
-            steps{
-               steps {
-                	script {
-                		sh 'ansible-playbook task.yml'
-                	}
-                }
+                sh 'mvn clean package'
             }
         }
     }
